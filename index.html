@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MapGL Map with Dynamic Legend</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        #legend { position: absolute; bottom: 30px; right: 10px; background: white; padding: 10px; max-width: 300px; }
+        .color-box { display: inline-block; width: 20px; height: 20px; margin-right: 10px; vertical-align: middle; position: relative; }
+        .line-box { display: inline-block; width: 20px; height: 2px!important; transform: translateY(-50%); }
+        .circle-box { border-radius: 50%; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+    <div id='legend'></div>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js'></script>
+    <script>
+    mapboxgl.accessToken = 'YOUR_ACCESS_TOKEN'; // Replace with your access token
+
+    var map = new mapboxgl.Map({
+        container: 'map', 
+        // Replace the belowwith your own map style URL, center, zoom level, and other options
+        style: 'mapbox://styles/mapbox/streets-v12', 
+        center: [-56, 4],
+        zoom: 7
+    });
+
+    map.on('load', function () {
+        var layerIds = ['water', 'national-park', 'admin-0-boundary']; // Layers to include in the legend
+
+        var legend = document.getElementById('legend');
+
+        layerIds.forEach(function (id) {
+            var layer = map.getLayer(id);
+            if (layer) {
+                var color = map.getPaintProperty(id, layer.type + '-color');
+                var formattedId = id.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+                var boxClass = layer.type === 'line' ? 'line-box' : layer.type === 'fill' ? 'fill-box' : 'circle-box';
+                var item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `<div class="color-box ${boxClass}" style="background-color:${color};"></div><span>${formattedId}</span>`;
+                legend.appendChild(item);
+            }
+        });
+    });
+    </script>
+</body>
+</html>
