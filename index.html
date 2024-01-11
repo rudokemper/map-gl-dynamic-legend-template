@@ -37,7 +37,7 @@
             var layer = map.getLayer(id);
             if (layer) {
                 var color = map.getPaintProperty(id, layer.type + '-color');
-                var formattedId = id.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+                var formattedId = id.replace(/-/g, ' ').replace(/^\w/, m => m.toUpperCase());
                 var boxClass = layer.type === 'line' ? 'line-box' : layer.type === 'fill' ? 'fill-box' : 'circle-box';
                 var item = document.createElement('div');
                 item.className = 'legend-item';
